@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Group11.Models.ApplicationUser>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Search Result</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nickname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Information)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(Html.DisplayFor(modelItem => item.Nickname).ToString(), "OtherUser", "Account", new { nick = item.Nickname }, null)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Information)
+            </td>
+        </tr>
+    }
+
+</table>

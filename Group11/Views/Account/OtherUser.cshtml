@@ -1,0 +1,20 @@
+﻿@model Group11.Models.ApplicationUser
+@{
+    ViewBag.Title = "OtherUser";
+}
+
+<h3>@Html.Encode(Model.Nickname) profile page</h3>
+<div data-role="collapsible" data-theme="b" data-content-theme="b">
+
+
+    <div>
+
+        <img src="@Url.Action("OtherUserPhotos", "Account",new { nick = Model.Nickname }, null )" style="width:200px;height:200px; background: #FFFFFF;
+    margin: auto;
+    padding: 6px;" />
+    </div>
+
+    @Html.Encode(Model.Information)
+
+
+</div>

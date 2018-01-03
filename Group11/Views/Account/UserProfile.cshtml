@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Group11.Models.ApplicationUser>
+
+    @{ 
+    ViewBag.Title = "Profile";
+}
+
+
+<h3>Your profile page</h3>
+<div>
+    
+    <img src="@Url.Action("UserPhotos", "Account")" style="width:200px;height:200px; background: #FFFFFF;
+    margin: auto;
+    padding: 6px;" />
+</div>
+@Html.ActionLink("Edit profile picture", "EditProfilePicture", "Account")
+<div>
+    @foreach (var item in Model)
+    {
+
+        @item.Information
+        
+
+
+    }
+</div>
+
+
+
+
+
+

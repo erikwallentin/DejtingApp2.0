@@ -1,0 +1,31 @@
+﻿@model Group11.Models.EditProfilePictureViewModel
+@{
+    ViewBag.Title = "EditProfilePicture";
+}
+
+
+
+@using (Html.BeginForm("EditProfilePicture", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <h2>Edit profile picture</h2>
+    <hr />
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserPhoto, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            <input type="file" name="UserPhoto" id="fileUpload" accept=".png,.jpg,.jpeg,.gif,.tif" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Edit" />
+        </div>
+    </div>
+
+    @Html.Raw(TempData["ImageFailMSG"])
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
