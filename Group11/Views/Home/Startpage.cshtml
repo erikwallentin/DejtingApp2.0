@@ -1,8 +1,15 @@
-﻿@model IEnumerable<Group11.Models.ApplicationUser>
-
+﻿@model Group11.Models.ApplicationUser
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Startpage";
 }
+<h2>Welcome to ... , a website for teddy bears</h2>
+<h4>A little text about our site here</h4>
+<p>Some of our users</p>
+<div>
+    @Html.ActionLink("Steve", "OtherUser", "Account", new { nick = "Steve" }, null)<br />
 
-<h2>Startpage</h2>
+    @Html.ActionLink("Paddington", "OtherUser", "Account", new { nick = "Paddington" }, null)<br />
 
+    @Html.ActionLink("Daisy", "OtherUser", "Account", new { nick = "Daisy" }, null)
+</div>
