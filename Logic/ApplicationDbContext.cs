@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Logic;
 
 namespace Group11.Models
 {
@@ -17,8 +18,9 @@ namespace Group11.Models
         }
 
        
-        public DbSet<Messages> Messages { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
 
-        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
