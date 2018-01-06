@@ -13,7 +13,7 @@ namespace Logic.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201801062004073_InitialModel"; }
+            get { return "201801062024504_InitialModel"; }
         }
         
         string IMigrationMetadata.Source

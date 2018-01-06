@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Logic;
+using Logic.Models;
 
 namespace Group11.Models
 {

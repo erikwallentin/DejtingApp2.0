@@ -78,15 +78,15 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="ApplicationUser.cs" />
-    <Compile Include="Migrations\201801062004073_InitialModel.cs" />
-    <Compile Include="Migrations\201801062004073_InitialModel.Designer.cs">
-      <DependentUpon>201801062004073_InitialModel.cs</DependentUpon>
+    <Compile Include="Migrations\201801062024504_InitialModel.cs" />
+    <Compile Include="Migrations\201801062024504_InitialModel.Designer.cs">
+      <DependentUpon>201801062024504_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Friend.cs" />
     <Compile Include="Models\FriendRequest.cs" />
     <Compile Include="Models\IdentityConfig.cs" />
-    <Compile Include="Models\Message.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
   </ItemGroup>
@@ -95,8 +95,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801062004073_InitialModel.resx">
-      <DependentUpon>201801062004073_InitialModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801062024504_InitialModel.resx">
+      <DependentUpon>201801062024504_InitialModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
