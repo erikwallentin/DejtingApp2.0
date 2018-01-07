@@ -208,8 +208,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.sv.resx</DependentUpon>
     </Compile>
+    <Compile Include="Models\AcceptedFriend.cs" />
+    <Compile Include="Models\AcceptedFriendsViewModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\OtherUserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -276,15 +279,12 @@
     <Content Include="Views\Home\Startpage.cshtml" />
     <Content Include="Views\Home\SearchPage.cshtml" />
     <Content Include="Views\Account\OtherUser.cshtml" />
-    <Content Include="Views\Friends\Create.cshtml" />
-    <Content Include="Views\Friends\Delete.cshtml" />
-    <Content Include="Views\Friends\Details.cshtml" />
-    <Content Include="Views\Friends\Edit.cshtml" />
-    <Content Include="Views\Friends\Index.cshtml" />
+    <Content Include="Views\Account\FriendRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Repositories\" />
+    <Folder Include="Views\Friends\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

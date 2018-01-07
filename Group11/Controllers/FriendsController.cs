@@ -1,128 +1,86 @@
-﻿using System;
+﻿using Group11.Models;
+using Logic;
+using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Group11.Models;
-using Logic;
 
 namespace Group11.Controllers
 {
     public class FriendsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext applicationDbContext = new ApplicationDbContext();
 
-        // GET: Friends
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
-            return View(db.Friends.ToList());
-        }
+            var user = User.Identity.GetUserId();
+            var userOneColumn = applicationDbContext.Friends.Include(x => x.User2).Where(x => x.User1.Id == user).ToList();
+            var userTwoColumn = applicationDbContext.Friends.Include(x => x.User1).Where(x => x.User2.Id == user).ToList();
+            var model = new AcceptedFriendsViewModel();
 
-        // GET: Friends/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+
+            foreach (var friend in userOneColumn)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Friend friend = db.Friends.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }
+                AcceptedFriend friendItem = new AcceptedFriend();
 
-        // GET: Friends/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: Friends/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id")] Friend friend)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Friends.Add(friend);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                friendItem.id = friend.User2.Id;
+                friendItem.name = friend.User2.Nickname;
+
+                model.listOfAcceptedFriends.Add(friendItem);
             }
 
-            return View(friend);
-        }
+            foreach (var item in userTwoColumn)
+            {
+                AcceptedFriend friendItem = new AcceptedFriend();
 
-        // GET: Friends/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Friend friend = db.Friends.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }
+                friendItem.id = item.User1.Id;
+                friendItem.name = item.User1.Nickname;
 
-        // POST: Friends/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id")] Friend friend)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(friend).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(friend);
-        }
+                model.listOfAcceptedFriends.Add(friendItem);
 
-        // GET: Friends/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Friend friend = db.Friends.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }
 
-        // POST: Friends/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Friend friend = db.Friends.Find(id);
-            db.Friends.Remove(friend);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+            return View(model);
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            
         }
     }
 }
+
+        // GET: Friends
+        //public ActionResult Index(string id)
+        //{
+        //    var user = User.Identity.GetUserId();
+        //    List<Friend> usersFromFirstColumn = applicationDbContext.Friends.Include(x => x.User2).Where(x => x.User1.Id == user).ToList();
+        //    List<Friend> usersFromSecondColumn = applicationDbContext.Friends.Include(x => x.User1).Where(x => x.User2.Id == user).ToList();
+        //    AcceptedFriendsViewModel acceptedFriendsViewModel = new AcceptedFriendsViewModel();
+        //    acceptedFriendsViewModel.listOfAcceptedFriends.Clear();
+        //    foreach (Friend friend in usersFromFirstColumn)
+        //    {
+        //        if (id != user)
+        //        {
+        //            AcceptedFriend acceptedFriend = new AcceptedFriend();
+        //            acceptedFriend.id = friend.User2.Id;
+        //            acceptedFriend.name = friend.User2.Nickname;
+        //            acceptedFriendsViewModel.listOfAcceptedFriends.Add(friend);
+        //        }
+        //    }
+
+//    foreach (Friend friend in usersFromSecondColumn)
+//    {
+//        AcceptedFriend acceptedFriend = new AcceptedFriend();
+//        acceptedFriend.id = friend.User1.Id;
+//        acceptedFriend.name = friend.User1.Nickname;
+
+
+//        if (!acceptedFriendsViewModel.listOfAcceptedFriends.Contains(friend))
+//            acceptedFriendsViewModel.listOfAcceptedFriends.Add(friend);
+//    }
+//    return View(acceptedFriendsViewModel.listOfAcceptedFriends);
+//}
+//}
+
+//}

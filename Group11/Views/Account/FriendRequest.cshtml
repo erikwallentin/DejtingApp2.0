@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Logic.FriendRequest>
+
+@{
+    ViewBag.Title = "FriendRequest";
+}
+
+
+    <table class="table">
+        <tr>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FriendSender.Nickname)
+                </td>
+                <td>
+                    @Html.ActionLink("Accept", "Accept", new { item.FriendSender.Id, Receiver = item.FriendReceiver })
+                </td>
+                <td>
+                    @Html.ActionLink("Decline", "DeclineFriendRequest", new { item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>

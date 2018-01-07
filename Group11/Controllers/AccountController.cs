@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using Group11.Models;
 using System.Data.Entity;
 using System.IO;
+using Logic;
+using System.Collections.Generic;
 
 namespace Group11.Controllers
 {
@@ -65,8 +67,9 @@ namespace Group11.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 var db = new ApplicationDbContext();
-                var model = db.Users.Where(x => x.Id == userId);
-                return View(model);
+                //var model = db.Users.Where(x => x.Id == userId);
+                ApplicationUser user = db.Users.Single(e => e.Id == userId);
+                return View(user);
             }
             
             else
@@ -200,18 +203,124 @@ namespace Group11.Controllers
             return RedirectToAction("Startpage", "Home");
         }
 
-        public ActionResult OtherUser(string nick)
+        public ActionResult OtherUser(string id)
         {
             var context = new ApplicationDbContext();
 
-            var searchuser = context.Users.Single(e => e.Nickname == nick);
+            var searchuser = context.Users.Single(e => e.Id == id);
 
             return View(searchuser);
+        }
+
+        [Authorize]
+        public ActionResult SendFriendRequest(string id)
+        {
+            ApplicationDbContext applicationDbContext = new ApplicationDbContext();
+
+            var senderID = User.Identity.GetUserId();
+
+            var receiverID = id;
+
+            var friendRequestRepository = new FriendRequestRepository(applicationDbContext);
+
+            var applicationUserRepository = new ApplicationUserRepository(applicationDbContext);
+
+            var sendingUser = applicationUserRepository.GetAll().Find(x => x.Id == senderID);
+            var recievingUser = applicationUserRepository.GetAll().Find(x => x.Id == receiverID);
+
+            var friend = new FriendRequest
+            {
+                FriendSender = sendingUser,
+                FriendReceiver = recievingUser
+            };
+            friendRequestRepository.Add(friend);
+            friendRequestRepository.Save();
+
+
+            return RedirectToAction("OtherUser", "Account", new { id = id });
+        }
+
+        public ActionResult FriendRequest()
+        {
+            ApplicationDbContext applicationDbContext = new ApplicationDbContext();
+
+            var user = User.Identity.GetUserId();
+            List<FriendRequest> friendRequests = applicationDbContext.FriendRequests.Include(x => x.FriendSender).Where(x => x.FriendReceiver.Id == user).ToList();
+
+
+                return View(friendRequests);
+
+        }
+
+        // **REWRITE (copy) **
+        public bool FriendRequestCheck(string id, ApplicationDbContext context)
+        {
+
+            var friendRequests = context.FriendRequests.Where(x => x.FriendReceiver.Id == id).ToList();
+            bool newFriend = false;
+
+            if (friendRequests.Count > 0)
+            {
+                newFriend = true;
+            }
+            return newFriend;
         }
 
         //
         // GET: /Account/ChangeUserData
 
+        public ActionResult Accept(string id)
+        {
+
+            ApplicationDbContext applicationDbContext = new ApplicationDbContext();
+            var ReceiverID = User.Identity.GetUserId();
+            var SenderID = id;
+
+            var friendRequestRepository = new FriendRequestRepository(applicationDbContext);
+            var friendRepository = new FriendRepository(applicationDbContext);
+
+            var applicationUserRepository = new ApplicationUserRepository(applicationDbContext);
+
+            var sendingUser = applicationUserRepository.GetAll().Find(x => x.Id == SenderID);
+            var recievingUser = applicationUserRepository.GetAll().Find(x => x.Id == ReceiverID);
+
+            var friend = new Friend
+            {
+                User1 = recievingUser,
+                User2 = sendingUser
+            };
+            friendRepository.Add(friend);
+            friendRepository.Save();
+
+
+            var removeList = applicationDbContext.FriendRequests.Where(x => (x.FriendReceiver.Id == ReceiverID && x.FriendSender.Id == SenderID) ||
+                (x.FriendReceiver.Id == SenderID && x.FriendSender.Id == ReceiverID));
+
+            foreach (var item in removeList)
+            {
+                friendRequestRepository.Items.Remove(item);
+            }
+
+            friendRequestRepository.Save();
+
+            return RedirectToAction("FriendRequest");
+
+        }
+
+        public ActionResult DeclineFriendRequest(int id)
+        {
+            ApplicationDbContext applicationDbContext = new ApplicationDbContext();
+
+            var friendrequestRepository = new FriendRequestRepository(applicationDbContext);
+            var user = friendrequestRepository.GetAll().Find(x => x.Id == id);
+
+            friendrequestRepository.Items.Remove(user);
+            friendrequestRepository.Save();
+
+            return RedirectToAction("FriendRequest");
+
+
+        }
         public ActionResult ChangeUserData()
         {
             var db = new ApplicationDbContext();
@@ -346,117 +455,117 @@ namespace Group11.Controllers
             return View(model);
         }
 
-        public FileContentResult UserPhotos(string id = null)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                String userId = User.Identity.GetUserId();
+        //public FileContentResult UserPhotos(string id = null)
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
+        //        String userId = User.Identity.GetUserId();
 
-                if (userId == null)
-                {
-                    string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+        //        if (userId == null)
+        //        {
+        //            string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
 
-                    byte[] imageData = null;
-                    FileInfo fileInfo = new FileInfo(fileName);
-                    long imageFileLength = fileInfo.Length;
-                    FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                    BinaryReader br = new BinaryReader(fs);
-                    imageData = br.ReadBytes((int)imageFileLength);
+        //            byte[] imageData = null;
+        //            FileInfo fileInfo = new FileInfo(fileName);
+        //            long imageFileLength = fileInfo.Length;
+        //            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //            BinaryReader br = new BinaryReader(fs);
+        //            imageData = br.ReadBytes((int)imageFileLength);
 
-                    return File(imageData, "image/png");
+        //            return File(imageData, "image/png");
 
-                }
-                // to get the user details to load user Image
+        //        }
+        //        // to get the user details to load user Image
 
-                if (id == null)
-                {
-                    var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
-                    var userImage = bdUsers.Users.Where(x => x.Id == userId).FirstOrDefault();
+        //        if (id == null)
+        //        {
+        //            var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+        //            var userImage = bdUsers.Users.Where(x => x.Id == userId).FirstOrDefault();
 
-                    return new FileContentResult(userImage.UserPhoto, "image/jpeg");
-                }
-                else
-                {
-                    var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
-                    var userImage = bdUsers.Users.Where(x => x.Id == id).FirstOrDefault();
+        //            return new FileContentResult(userImage.UserPhoto, "image/jpeg");
+        //        }
+        //        else
+        //        {
+        //            var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+        //            var userImage = bdUsers.Users.Where(x => x.Id == id).FirstOrDefault();
 
-                    return new FileContentResult(userImage.UserPhoto, "image/jpeg");
-                }
-            }
-            else
-            {
-                string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+        //            return new FileContentResult(userImage.UserPhoto, "image/jpeg");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
 
-                byte[] imageData = null;
-                FileInfo fileInfo = new FileInfo(fileName);
-                long imageFileLength = fileInfo.Length;
-                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                BinaryReader br = new BinaryReader(fs);
-                imageData = br.ReadBytes((int)imageFileLength);
-                return File(imageData, "image/png");
+        //        byte[] imageData = null;
+        //        FileInfo fileInfo = new FileInfo(fileName);
+        //        long imageFileLength = fileInfo.Length;
+        //        FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //        BinaryReader br = new BinaryReader(fs);
+        //        imageData = br.ReadBytes((int)imageFileLength);
+        //        return File(imageData, "image/png");
 
-            }
-        }
+        //    }
+        //}
 
-        public FileContentResult OtherUserPhotos(string nick)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                String userId = User.Identity.GetUserId();
+        //public FileContentResult OtherUserPhotos(string nick)
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
+        //        String userId = User.Identity.GetUserId();
 
-                if (userId == null)
-                {
-                    string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+        //        if (userId == null)
+        //        {
+        //            string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
 
-                    byte[] imageData = null;
-                    FileInfo fileInfo = new FileInfo(fileName);
-                    long imageFileLength = fileInfo.Length;
-                    FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                    BinaryReader br = new BinaryReader(fs);
-                    imageData = br.ReadBytes((int)imageFileLength);
+        //            byte[] imageData = null;
+        //            FileInfo fileInfo = new FileInfo(fileName);
+        //            long imageFileLength = fileInfo.Length;
+        //            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //            BinaryReader br = new BinaryReader(fs);
+        //            imageData = br.ReadBytes((int)imageFileLength);
 
-                    return File(imageData, "image/png");
+        //            return File(imageData, "image/png");
 
-                }
-                // to get the user details to load user Image
-                var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
-                var userImage = bdUsers.Users.Where(x => x.Nickname == nick).FirstOrDefault();
+        //        }
+        //        // to get the user details to load user Image
+        //        var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+        //        var userImage = bdUsers.Users.Where(x => x.Nickname == nick).FirstOrDefault();
 
-                return new FileContentResult(userImage.UserPhoto, "image/jpeg");
-            }
-            else
-            {
-                string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+        //        return new FileContentResult(userImage.UserPhoto, "image/jpeg");
+        //    }
+        //    else
+        //    {
+        //        string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
 
-                byte[] imageData = null;
-                FileInfo fileInfo = new FileInfo(fileName);
-                long imageFileLength = fileInfo.Length;
-                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                BinaryReader br = new BinaryReader(fs);
-                imageData = br.ReadBytes((int)imageFileLength);
-                return File(imageData, "image/png");
+        //        byte[] imageData = null;
+        //        FileInfo fileInfo = new FileInfo(fileName);
+        //        long imageFileLength = fileInfo.Length;
+        //        FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //        BinaryReader br = new BinaryReader(fs);
+        //        imageData = br.ReadBytes((int)imageFileLength);
+        //        return File(imageData, "image/png");
 
-            }
-        }
+        //    }
+        //}
 
         // A method that makes the users nickname display on the navbar when logged in
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            if (User != null)
-            {
-                var context = new ApplicationDbContext();
-                var userId = User.Identity.GetUserId();
+        //protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        //{
+        //    if (User != null)
+        //    {
+        //        var context = new ApplicationDbContext();
+        //        var userId = User.Identity.GetUserId();
 
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    var user = context.Users.SingleOrDefault(u => u.Id == userId);
-                    string Nick = user.Nickname;
-                    ViewData.Add("Nick", Nick);
-                }
-            }
-            base.OnActionExecuted(filterContext);
-        }
+        //        if (!string.IsNullOrEmpty(userId))
+        //        {
+        //            var user = context.Users.SingleOrDefault(u => u.Id == userId);
+        //            string Nick = user.Nickname;
+        //            ViewData.Add("Nick", Nick);
+        //        }
+        //    }
+        //    base.OnActionExecuted(filterContext);
+        //}
 
         protected override void Dispose(bool disposing)
         {

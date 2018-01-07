@@ -78,6 +78,9 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="ApplicationUser.cs" />
+    <Compile Include="ApplicationUserRepository.cs" />
+    <Compile Include="FriendRepository.cs" />
+    <Compile Include="FriendRequestRepository.cs" />
     <Compile Include="Migrations\201801062024504_InitialModel.cs" />
     <Compile Include="Migrations\201801062024504_InitialModel.Designer.cs">
       <DependentUpon>201801062024504_InitialModel.cs</DependentUpon>

@@ -6,6 +6,7 @@
     @Html.AntiForgeryToken()
 
     <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("New FriendRequest", "FriendRequest", "Account")</li>
         <li>
             @Html.ActionLink("Edit " + (ViewData["Nick"]), "ChangeUserData", "Account", routeValues: null, htmlAttributes: new { id = "edittheuser" })
         </li>
