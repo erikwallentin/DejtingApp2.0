@@ -207,8 +207,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.sv.resx</DependentUpon>
     </Compile>
-    <Compile Include="Models\AcceptedFriend.cs" />
-    <Compile Include="Models\AcceptedFriendsViewModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OtherUserViewModel.cs" />

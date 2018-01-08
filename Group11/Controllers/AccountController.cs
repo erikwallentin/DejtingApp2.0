@@ -207,7 +207,6 @@ namespace Group11.Controllers
             List<Friend> usersFromUser2Column = context.Friends.Include(x => x.User1).Where(x => x.User2.Id == user).ToList();
 
             List<ApplicationUser> listOfFriends = new List<ApplicationUser>();
-            AcceptedFriendsViewModel acceptedFriendsViewModel = new AcceptedFriendsViewModel();
 
             foreach (Friend friend in usersFromUser1Column)
             {
