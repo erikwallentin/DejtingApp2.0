@@ -21,7 +21,7 @@ namespace Logic
                 Email = "Steve@Steve.com",
                 PasswordHash = password,
                 Nickname = "Steve",
-                Information = "Hello! this is Steve. Contact me if you want to hang out sometime!",
+                Information = "Hello! this is Steve. Contact me if you want to hang out sometime.",
                 UserPhoto = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Pictures\Steve.jpg")),
                 SecurityStamp = Guid.NewGuid().ToString()
             };

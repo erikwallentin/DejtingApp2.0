@@ -192,9 +192,17 @@ namespace Group11.Controllers
         public ActionResult OtherUser(string nick)
         {
 
-            var searchuser = context.Users.Single(e => e.Nickname == nick);
+            try
+            {
+                var searchuser = context.Users.Single(e => e.Nickname == nick);
 
-            return View(searchuser);
+                return View(searchuser);
+            }
+            catch (Exception)
+            {
+                TempData["OppsFailMSG"] = "<script>alert('Opps! Something went wrong, try acess another users profilepage');</script>";
+                return RedirectToAction("Userprofile", "Account");
+            }
         }
 
 
@@ -213,7 +221,7 @@ namespace Group11.Controllers
             {
                 friendsViewModel.listOfMyFriends.Add(new AcceptedFriend { Id = friend.User1.Id, Nickname = friend.User1.Nickname });
                 listOfFriends.Add(friend.User1);
-                
+
             }
 
             foreach (Friend friend in usersFromSecondColumn)
@@ -357,21 +365,28 @@ namespace Group11.Controllers
         {
             if (ModelState.IsValid)
             {
-                string userId = User.Identity.GetUserId();
+                try
+                {
+                    string userId = User.Identity.GetUserId();
 
-                ApplicationUser user = context.Users.FirstOrDefault(u => u.Id.Equals(userId));
+                    ApplicationUser user = context.Users.FirstOrDefault(u => u.Id.Equals(userId));
 
-                user.UserName = userprofile.Email;
-                user.Email = user.UserName;
-                user.Nickname = userprofile.Nickname;
-                user.Information = userprofile.Information;
-                user.Searchable = userprofile.Searchable;
+                    user.UserName = userprofile.Email;
+                    user.Email = user.UserName;
+                    user.Nickname = userprofile.Nickname;
+                    user.Information = userprofile.Information;
+                    user.Searchable = userprofile.Searchable;
 
-                context.Entry(user).State = EntityState.Modified;
-                context.SaveChanges();
+                    context.Entry(user).State = EntityState.Modified;
+                    context.SaveChanges();
 
-                return RedirectToAction("UserProfile", "Account");
-
+                    return RedirectToAction("UserProfile", "Account");
+                }
+                catch (Exception)
+                {
+                    TempData["SQLFailMSG"] = "<script>alert('The desired email-address is already used by another user. Please try another email-address');</script>";
+                    return View(userprofile);
+                }
             }
             return View(userprofile);
 
