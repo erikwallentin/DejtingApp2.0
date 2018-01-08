@@ -12,11 +12,10 @@
     margin: auto;
     padding: 6px;" />
 </div>
-@Html.ActionLink("Friends", "Friends", "Account", new { id = Model.Id}, null)
-@Html.ActionLink("Edit profile picture", "EditProfilePicture", "Account")
-<div>
-   
-</div>
+
+<div>@Html.ActionLink("Edit profile picture", "EditProfilePicture", "Account")</div>
+<div>@Html.ActionLink("Friends", "Friends", "Account", new { id = Model.Id }, null)</div>
+<div>@Html.DisplayFor(model => model.Information)</div>
 
 
 
