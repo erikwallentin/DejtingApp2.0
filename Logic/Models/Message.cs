@@ -13,5 +13,6 @@ namespace Logic.Models
         public ApplicationUser Receiver { get; set; }
         public ApplicationUser Sender { get; set; }
         public string Text { get; set; }
+
     }
 }

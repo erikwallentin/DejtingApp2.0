@@ -203,11 +203,11 @@ namespace Group11.Controllers
             return RedirectToAction("Startpage", "Home");
         }
 
-        public ActionResult OtherUser(string id)
+        public ActionResult OtherUser(string nick)
         {
             var context = new ApplicationDbContext();
 
-            var searchuser = context.Users.Single(e => e.Id == id);
+            var searchuser = context.Users.Single(e => e.Nickname == nick);
 
             return View(searchuser);
         }

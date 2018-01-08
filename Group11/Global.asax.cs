@@ -1,4 +1,5 @@
 ﻿using Group11.Models;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -14,9 +15,9 @@ namespace Group11
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            Database.SetInitializer(
-                   new DropCreateDatabaseIfModelChanges<ApplicationDbContext>());
-
+            
+            Database.SetInitializer(new SeedUsers());
+            
 
 
             AreaRegistration.RegisterAllAreas();
@@ -25,7 +26,9 @@ namespace Group11
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-        
+       
 
     }
+
+
 }
