@@ -203,29 +203,27 @@ namespace Group11.Controllers
         {
 
             var user = User.Identity.GetUserId();
-            List<Friend> usersFromUser1Column = context.Friends.Include(x => x.User2).Where(x => x.User1.Id == user).ToList();
-            List<Friend> usersFromUser2Column = context.Friends.Include(x => x.User1).Where(x => x.User2.Id == user).ToList();
+            List<Friend> usersFromSecondColumn = context.Friends.Include(x => x.User2).Where(x => x.User1.Id == user).ToList();
+            List<Friend> usersFromFirstColumn = context.Friends.Include(x => x.User1).Where(x => x.User2.Id == user).ToList();
 
             List<ApplicationUser> listOfFriends = new List<ApplicationUser>();
+            FriendsViewModel friendsViewModel = new FriendsViewModel();
 
-            foreach (Friend friend in usersFromUser1Column)
+            foreach (Friend friend in usersFromFirstColumn)
             {
-                if (id != user)
-                {
-
-                    listOfFriends.Add(friend.User1);
-                }
+                friendsViewModel.listOfMyFriends.Add(new AcceptedFriend { Id = friend.User1.Id, Nickname = friend.User1.Nickname });
+                listOfFriends.Add(friend.User1);
+                
             }
 
-            foreach (Friend friend in usersFromUser2Column)
+            foreach (Friend friend in usersFromSecondColumn)
             {
-
-                if (!listOfFriends.Contains(friend.User2))
-                    listOfFriends.Add(friend.User2);
+                friendsViewModel.listOfMyFriends.Add(new AcceptedFriend { Id = friend.User2.Id, Nickname = friend.User2.Nickname });
+                //if (!listOfFriends.Contains(friend.User2))
+                listOfFriends.Add(friend.User2);
             }
 
-            ViewBag.List = listOfFriends;
-            return View(listOfFriends);
+            return View(friendsViewModel);
         }
 
         [Authorize]

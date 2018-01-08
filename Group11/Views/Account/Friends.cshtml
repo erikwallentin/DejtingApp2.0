@@ -1,6 +1,22 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿@model Group11.Controllers.FriendsViewModel
 
-@foreach (var item in Model)
+
+@{
+    ViewBag.Title = "My Friends";
+}
+
+<h3>My Friends</h3>
+
+@if (Model != null)
 {
-    <li>item.Nickname</li>
+    foreach (var item in Model.listOfMyFriends)
+    {
+        <ul>
+            <li>
+                <div>@Html.ActionLink(item.Nickname, "OtherUser", "Account", new { nick = item.Nickname }, null)</div>
+            </li>
+        </ul>
+        
+
+    }
 }
