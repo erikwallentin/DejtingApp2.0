@@ -18,17 +18,14 @@ namespace Group11.Controllers
         [Authorize]
         public ActionResult SearchPage(string searchString)
         {
-           
+
             var db = new ApplicationDbContext();
 
             var users = db.Users.ToList();
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                users = users.Where(s => s.Nickname.Contains(searchString)).ToList();
-            }
+            var results = db.Users.Where(x => x.Nickname.Contains(searchString) && x.Searchable || x.UserName.Contains(searchString) && x.Searchable).ToList();
+            return View(results);
 
-            return View(users);
         }
 
 

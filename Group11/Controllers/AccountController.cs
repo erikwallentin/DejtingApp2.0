@@ -237,7 +237,7 @@ namespace Group11.Controllers
             friendRequestRepository.Save();
 
 
-            return RedirectToAction("OtherUser", "Account", new { id = id });
+            return RedirectToAction("SearchPage", "Home", new { SearchString = "" });
         }
 
         public ActionResult FriendRequest()
@@ -332,8 +332,10 @@ namespace Group11.Controllers
             model.Email = user.UserName;
             model.Nickname = user.Nickname;
             model.Information = user.Information;
+            model.Searchable = user.Searchable;
 
-            return View(model);
+
+                return View(model);
 
         }
 
@@ -354,6 +356,7 @@ namespace Group11.Controllers
                 user.Email = user.UserName;
                 user.Nickname = userprofile.Nickname;
                 user.Information = userprofile.Information;
+                user.Searchable = userprofile.Searchable;
 
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();

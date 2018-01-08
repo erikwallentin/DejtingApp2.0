@@ -97,6 +97,15 @@ namespace Group11.Internationalization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Searchable.
+        /// </summary>
+        public static string TitelSearchable {
+            get {
+                return ResourceManager.GetString("TitelSearchable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please use the correct email format.
         /// </summary>
         public static string ValMessageEmail {

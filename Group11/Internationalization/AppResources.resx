@@ -129,6 +129,9 @@
   <data name="TitelNickname" xml:space="preserve">
     <value>Nickname</value>
   </data>
+  <data name="TitelSearchable" xml:space="preserve">
+    <value>Searchable</value>
+  </data>
   <data name="ValMessageEmail" xml:space="preserve">
     <value>Please use the correct email format</value>
   </data>

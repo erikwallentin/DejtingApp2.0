@@ -19,6 +19,8 @@ namespace Group11.Models
        
         public byte[] UserPhoto { get; set; }
 
+        public bool Searchable { get; set; } = true;
+
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Friend> Friends { get; set; }
 

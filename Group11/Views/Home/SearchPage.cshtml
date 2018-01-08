@@ -26,6 +26,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Information)
             </td>
+            <td>
+                @Html.ActionLink("Send Friend Request", "SendFriendRequest", "Account", new { id = item.Id }, new { onclick = "return confirm('Are sure wants to befriend this user?');" })
+            </td>
         </tr>
     }
 

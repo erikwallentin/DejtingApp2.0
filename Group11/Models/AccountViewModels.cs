@@ -107,7 +107,9 @@ namespace Group11.Models
         [RegularExpression(@"^(?![\s]).+[A-Za-zåäöÅÄÖ0-9]*[A-Za-zåäöÅÄÖ0-9 ]*[A-Za-zåäöÅÄÖ0-9.]+(?![\s])$", ErrorMessageResourceType = typeof(AppResources), ErrorMessageResourceName = nameof(AppResources.ValMessageInformation))]
         public string Information { get; set; }
 
-    }
+        [Display(ResourceType = typeof(AppResources), Name = nameof(AppResources.TitelSearchable))]
+        public bool Searchable { get; set; }
+    }   
 
     public class EditProfilePictureViewModel
     {
