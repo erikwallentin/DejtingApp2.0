@@ -9,12 +9,15 @@ namespace Group11.Models
 
     public class AcceptedFriendsViewModel
     {
+        public string Nickname { get; set; }
+        public List<ApplicationUser> ListOfAcceptedFriends { get; set; }
+
         public AcceptedFriendsViewModel()
         {
-            List<AcceptedFriend> listOfAcceptedFriends = new List<AcceptedFriend>();
+            List<ApplicationUser> listOfAcceptedFriends = new List<ApplicationUser>();
         }
 
-        public List<AcceptedFriend> listOfAcceptedFriends { get; set; }
+        
     }
 
 

@@ -76,18 +76,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="ApplicationUser.cs" />
-    <Compile Include="ApplicationUserRepository.cs" />
-    <Compile Include="FriendRepository.cs" />
-    <Compile Include="FriendRequestRepository.cs" />
+    <Compile Include="Repositories\ApplicationDbContext.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Repositories\ApplicationUserRepository.cs" />
+    <Compile Include="Repositories\FriendRepository.cs" />
+    <Compile Include="Repositories\FriendRequestRepository.cs" />
     <Compile Include="Models\Friend.cs" />
     <Compile Include="Models\FriendRequest.cs" />
     <Compile Include="Models\IdentityConfig.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="SeedUsers.cs" />
+    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Repositories\SeedUsers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

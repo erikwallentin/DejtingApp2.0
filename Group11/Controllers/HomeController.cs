@@ -19,11 +19,11 @@ namespace Group11.Controllers
         public ActionResult SearchPage(string searchString)
         {
 
-            var db = new ApplicationDbContext();
+            var context = new ApplicationDbContext();
 
-            var users = db.Users.ToList();
+            var users = context.Users.ToList();
 
-            var results = db.Users.Where(x => x.Nickname.Contains(searchString) && x.Searchable || x.UserName.Contains(searchString) && x.Searchable).ToList();
+            var results = context.Users.Where(x => x.Nickname.Contains(searchString) && x.Searchable || x.UserName.Contains(searchString) && x.Searchable).ToList();
             return View(results);
 
         }
