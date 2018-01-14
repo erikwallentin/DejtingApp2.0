@@ -267,7 +267,7 @@ namespace Group11.Controllers
             List<FriendRequest> friendRequests = context.FriendRequests.Include(x => x.FriendSender).Where(x => x.FriendReceiver.Id == user).ToList();
 
 
-            return View(friendRequests);
+                return View(friendRequests);
 
         }
 

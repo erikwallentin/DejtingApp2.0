@@ -3,19 +3,30 @@
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("New FriendRequest", "FriendRequest", "Account")</li>
-        <li>
-            @Html.ActionLink("Edit " + (ViewData["Nick"]), "ChangeUserData", "Account", routeValues: null, htmlAttributes: new { id = "edittheuser" })
-        </li>
+        <ul class="nav navbar-nav navbar-right">
 
-        <li><img src="@Url.Action("UserPhotos", "Account" )" height="48" width="48" /></li>
+            @using (var db = new ApplicationDbContext())
+            {
+                var user = User.Identity.GetUserId();
+                var friendRequests = db.FriendRequests.Where(x => x.FriendReceiver.Id == user).ToList();
 
-        <li>@Html.ActionLink("Change password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { id = "changepasswordLink" })</li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
-    </ul>
+                var unseenRequests = friendRequests.ToList().Count();
+
+                <li>@Html.ActionLink("Friend Requests" + "(" + unseenRequests + ")", "FriendRequest", "Account")</li>
+
+            }
+
+                <li>
+                    @Html.ActionLink("Edit " + (ViewData["Nick"]), "ChangeUserData", "Account", routeValues: null, htmlAttributes: new { id = "edittheuser" })
+                </li>
+
+                <li><img src="@Url.Action("UserPhotos", "Account" )" height="48" width="48" /></li>
+
+                <li>@Html.ActionLink("Change password", "ChangePassword", "Account", routeValues: null, htmlAttributes: new { id = "changepasswordLink" })</li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
+        </ul>
     }
 }
 else
