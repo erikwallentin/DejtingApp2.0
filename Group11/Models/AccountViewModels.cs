@@ -1,4 +1,5 @@
 ﻿using Group11.Internationalization;
+using Logic.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -164,6 +165,13 @@ namespace Group11.Models
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class ProfilViewModel
+    {
+        public ApplicationUser User { get; set; }
+        public List<Posts> Posts { get; set; }
+
     }
 
 }

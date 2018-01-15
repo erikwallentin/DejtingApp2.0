@@ -19,7 +19,7 @@ namespace Group11.Models
         }
 
        
-        public DbSet<Message> Messages { get; set; }
+        public DbSet<Posts> Posts { get; set; }
         public DbSet<Friend> Friends { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
 

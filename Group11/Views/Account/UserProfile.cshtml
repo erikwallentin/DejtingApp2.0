@@ -1,26 +1,88 @@
-﻿@model Group11.Models.ApplicationUser
+﻿@using Microsoft.AspNet.Identity
+@model Group11.Models.ProfilViewModel
 
-    @{ 
+@{
     ViewBag.Title = "Profile";
 }
 
 
 <h3>Your profile page</h3>
 <div>
-    
+
     <img src="@Url.Action("UserPhotos", "Account")" style="width:200px;height:200px; background: #FFFFFF;
     margin: auto;
     padding: 6px;" />
 </div>
 
 <div>@Html.ActionLink("Edit profile picture", "EditProfilePicture", "Account")</div>
-<div>@Html.ActionLink("Friends", "Friends", "Account", new { id = Model.Id }, null)</div>
-<div>@Html.DisplayFor(model => model.Information)</div>
+<div>@Html.ActionLink("Friends", "Friends", "Account", new { id = Model.User.Id }, null)</div>
+<div>@Html.DisplayFor(model => model.User.Information)</div>
 
 
 @Html.Raw(TempData["OppsFailMSG"])
 
 
+<br>
 
+<h4>Your wall</h4>
+<div>
+    <textarea id="Text"></textarea>
+    <input id="createBtn" type="button" value="Send" />
+</div>
+<table class="table" id="mytable"></table>
+
+@section scripts {
+    <script type="text/javascript">
+        var id = "@Model.User.Id";
+
+        $(document).ready(function() {
+            getNew();
+        });
+
+        function getNew() {
+            $.ajax("/api/Posts/List").then(function (data) {
+                console.log(data)
+                for(var i=0;i<data.length;i++)
+                {
+                    if (data[i].toUser == id) {
+                        var tr="<tr>";
+                        var td1="<td>"+data[i].fromUser+"</td>";
+                        var td2="<td>"+data[i].text+"</td></tr>";
+
+                        $("#mytable").prepend(tr+td1+td2);
+                    }
+
+
+                }
+            });
+        }
+
+
+
+            $("#createBtn").click(function() {
+                var request = new PostModel();
+
+                $.ajax({
+                    url: "/api/Posts/PostMessage",
+                    datatype: 'json',
+                    contentType: "application/json",
+                    type: "POST",
+                    data: JSON.stringify(request),
+                    success: function (response) {
+                        $("#mytable").empty();
+                        $("#Text").val("");
+                        getNew();
+                    }
+                });
+            });
+
+            function PostModel() {
+                var self = this;
+                self.Text = $("#Text").val();
+                self.FromUser = "@User.Identity.GetUserId()";
+                self.ToUser = "@Model.User.Id";
+            }
+    </script>
+}
 
 

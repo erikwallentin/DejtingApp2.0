@@ -13,6 +13,7 @@ using System.Data.Entity;
 using System.IO;
 using Logic;
 using System.Collections.Generic;
+using Logic.Models;
 
 namespace Group11.Controllers
 {
@@ -62,18 +63,32 @@ namespace Group11.Controllers
         // GET: /Account/UserProfile
         public ActionResult UserProfile(string id = null)
         {
-
-            if (id == null)
             {
-                var userId = User.Identity.GetUserId();
-                ApplicationUser user = context.Users.Single(e => e.Id == userId);
-                return View(user);
-            }
 
-            else
-            {
-                var model = context.Users.Where(x => x.Id == id);
-                return View(model);
+                if (id == null)
+                {
+                    var userId = User.Identity.GetUserId();
+                    ApplicationUser user = context.Users.Single(e => e.Id == userId);
+                    return View(new ProfilViewModel
+                    {
+                        User = user,
+                        Posts = new List<Posts>(),
+
+                    });
+                }
+
+                else
+                {
+                    var userId = User.Identity.GetUserId();
+                    ApplicationUser user = context.Users.Single(e => e.Id == userId);
+                    var model = context.Users.Where(x => x.Id == id);
+                    return View(new ProfilViewModel
+                    {
+                        User = user,
+                        Posts = new List<Posts>(),
+
+                    });
+                }
             }
         }
 
@@ -191,12 +206,16 @@ namespace Group11.Controllers
 
         public ActionResult OtherUser(string nick)
         {
-
             try
             {
                 var searchuser = context.Users.Single(e => e.Nickname == nick);
 
-                return View(searchuser);
+                return View(new ProfilViewModel
+                {
+                    User = searchuser,
+                    Posts = new List<Posts>(),
+
+                });
             }
             catch (Exception)
             {
